@@ -14,7 +14,7 @@ gráficos y discusión de tiempo, memoria, brecha y fallas por tamaño, tipo y d
 - `sections/experiment_results.tex`: análisis teórico y experimental.
 - `sections/generated_cost_table.tex`, `sections/generated_quality_table.tex`: tablas generadas del CSV.
 - `sections/conclusions.tex`: conclusiones respaldadas por los resultados.
-- `references.bib`: enunciado, libro de Roughgarden y documentación de memoria.
+- `references.bib`: libro de Roughgarden y documentación de memoria.
 - `report.pdf`: informe compilado.
 
 ## Regenerar datos y figuras
