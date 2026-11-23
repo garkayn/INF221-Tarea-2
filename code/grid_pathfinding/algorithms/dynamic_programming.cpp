@@ -1,5 +1,11 @@
+// Se usa tabulación y cada estado incluye celda y vidas.
+// Para reconstruir el camino se guarda el movimiento usado para llegar a cada
+// estado; los empates conservan la primera solución encontrada.
+// Al elegir el estado final, un empate de puntaje prefiere más vidas.
+// Matías Jorquera, rol 202310127-3, INF-221, Tarea 2, 2026-2, Casa Central.
 
-#include <functional>
+#include <algorithm>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -32,68 +38,107 @@ bool hasValidDimensions(int n, int m,
     return true;
 }
 
-} 
+}  // namespace
 
-PathResult solveDP(int n, int m, int v, int p,
-                   const std::vector<std::vector<int>>& types,
-                   const std::vector<std::vector<long long>>& values){
-                    const PathResult noSolution{false, 0, "", 0};
+PathResult solveDP(
+    int n, int m, int v, int p,
+    const std::vector<std::vector<int>>& types,
+    const std::vector<std::vector<long long>>& values) {
+    const PathResult noSolution{false, 0, "", 0};
     if (v <= 0 || !hasValidDimensions(n, m, types, values) ||
         types[0][0] != 1) {
         return noSolution;
     }
 
-    PathResult best{false, 0, "", 0};
-    std::string currentPath;
+    const long long unreachable = std::numeric_limits<long long>::lowest();
+    std::vector<std::vector<std::vector<long long>>> best(
+        n, std::vector<std::vector<long long>>(m,
+                                               std::vector<long long>(v + 1, unreachable)));
+    std::vector<std::vector<std::vector<char>>> previousMove(
+        n, std::vector<std::vector<char>>(m, std::vector<char>(v + 1, '\0')));
 
-    // Cada llamada representa un prefijo de una ruta. No se memorizan estados
-    // ni se usan cotas sobre el puntaje: se consideran todas las rutas válidas.
-    std::function<void(int, int, int, long long)> explore =
-        [&](int row, int col, int lives, long long score) {
-            if (row == n - 1 && col == m - 1) {
-                if (!best.found || score > best.score) {
-                    best = PathResult{true, score, currentPath, lives};
-                }
-                return;
-            }
+    best[0][0][v] = values[0][0];
 
-            // El orden R y luego D hace determinista la ruta elegida si hay
-            // varias soluciones óptimas; los empates conservan la primera.
-            const int nextRows[2] = {row, row + 1};
-            const int nextCols[2] = {col + 1, col};
-            const char moves[2] = {'R', 'D'};
-
-            for (int direction = 0; direction < 2; ++direction) {
-                const int nextRow = nextRows[direction];
-                const int nextCol = nextCols[direction];
-                if (nextRow >= n || nextCol >= m) {
+    // Cada estado guarda el mejor puntaje para una celda y una cantidad exacta
+    // de vidas. Como solo hay movimientos R y D, se puede recorrer la grilla
+    // de arriba hacia abajo y de izquierda a derecha.
+    for (int row = 0; row < n; ++row) {
+        for (int col = 0; col < m; ++col) {
+            for (int lives = 1; lives <= v; ++lives) {
+                const long long currentScore = best[row][col][lives];
+                if (currentScore == unreachable) {
                     continue;
                 }
 
-                const int cellType = types[nextRow][nextCol];
-                if (cellType == 0 || (cellType != 1 && cellType != -1)) {
-                    continue;
-                }
+                const int nextRows[2] = {row, row + 1};
+                const int nextCols[2] = {col + 1, col};
+                const char moves[2] = {'R', 'D'};
 
-                int nextLives = lives;
-                long long nextScore = score;
-                if (cellType == -1) {
-                    // Si queda una sola vida, detonarla deja al rover en cero.
-                    if (nextLives == 1) {
+                for (int direction = 0; direction < 2; ++direction) {
+                    const int nextRow = nextRows[direction];
+                    const int nextCol = nextCols[direction];
+                    if (nextRow >= n || nextCol >= m) {
                         continue;
                     }
-                    --nextLives;
-                    nextScore -= p;
-                } else {
-                    nextScore += values[nextRow][nextCol];
+
+                    const int cellType = types[nextRow][nextCol];
+                    if (cellType != 1 && cellType != -1) {
+                        continue;
+                    }
+
+                    int nextLives = lives;
+                    long long nextScore = currentScore;
+                    if (cellType == -1) {
+                        if (lives == 1) {
+                            continue;
+                        }
+                        --nextLives;
+                        nextScore -= p;
+                    } else {
+                        nextScore += values[nextRow][nextCol];
+                    }
+
+                    if (nextScore > best[nextRow][nextCol][nextLives]) {
+                        best[nextRow][nextCol][nextLives] = nextScore;
+                        previousMove[nextRow][nextCol][nextLives] = moves[direction];
+                    }
                 }
-
-                currentPath.push_back(moves[direction]);
-                explore(nextRow, nextCol, nextLives, nextScore);
-                currentPath.pop_back();
             }
-        };
+        }
+    }
 
-    explore(0, 0, v, values[0][0]);
-    return best.found ? best : noSolution;
-                   }
+    int bestLives = 0;
+    long long bestScore = unreachable;
+    for (int lives = v; lives >= 1; --lives) {
+        if (best[n - 1][m - 1][lives] > bestScore) {
+            bestScore = best[n - 1][m - 1][lives];
+            bestLives = lives;
+        }
+    }
+
+    if (bestLives == 0) {
+        return noSolution;
+    }
+
+    std::string path;
+    int row = n - 1;
+    int col = m - 1;
+    int lives = bestLives;
+    while (row != 0 || col != 0) {
+        const int destinationRow = row;
+        const int destinationCol = col;
+        const char move = previousMove[row][col][lives];
+        path.push_back(move);
+        if (move == 'R') {
+            --col;
+        } else {
+            --row;
+        }
+        if (types[destinationRow][destinationCol] == -1) {
+            ++lives;
+        }
+    }
+
+    std::reverse(path.begin(), path.end());
+    return PathResult{true, bestScore, path, bestLives};
+}

@@ -1,6 +1,5 @@
-// Fuentes: enunciado de la Tarea 2, secciones "Definición del problema" y
-// "Regla greedy". En cada paso se elige la vecina accesible con mayor ganancia
-// neta local; en un empate se conserva la candidata de la derecha.
+// Implementado según lo descrito en el enunciado
+// Matías Jorquera, rol 202310127-3, INF-221, Tarea 2, 2026-2, Casa Central.
 
 #include <string>
 #include <vector>

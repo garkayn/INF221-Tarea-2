@@ -1,0 +1,13 @@
+tmp/
+__pycache__/
+*.pyc
+*.o
+code/grid_pathfinding/grid_pathfinding
+code/grid_pathfinding/grid_pathfinding.exe
+report/*.aux
+report/*.bcf
+report/*.bbl
+report/*.blg
+report/*.log
+report/*.out
+report/*.run.xml

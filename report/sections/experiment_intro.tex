@@ -1,5 +1,13 @@
-\begin{mdframed}
-    \textbf{La extensión máxima para esta sección es de media página.}
-\end{mdframed}
+Se utilizó GCC 15.2.0 (MSYS2), C++17 con \texttt{-O2}, y Python 3.12 con NumPy, pandas y Matplotlib.
+Se generaron 288 instancias con semilla 2026: filas $N=4$, $8$, $16$,
+$64$, $256$, $1024$; columnas $M=N$ o $2N$; cuatro tipos, dos dominios
+y tres muestras; $V=3$ y $P=10$ o $1000$. Un camino reservado sin
+obstáculos garantiza que todas tengan solución.
 
-Especifique el hardware y software utilizado para realizar los experimentos (por ejemplo, procesador, memoria RAM, sistema operativo, compilador y versión). Incluya una mención breve de los datasets utilizados, los cuales son los descritos en el enunciado de la tarea.
+El auxiliar \texttt{scripts/benchmark\_runner.cpp} mide cada algoritmo en
+un proceso separado. Cronometra solo el solver, sus asignaciones y la
+reconstrucción; usa la mediana de tres llamadas, salvo fuerza bruta en
+$16\times16$, medida una vez. La memoria es el máximo
+(\texttt{PeakWorkingSetSize}), con entrada, bibliotecas y
+asignador~\cite{memoria_windows}, expresado en MiB.
+Las figuras promedian las instancias de cada grupo

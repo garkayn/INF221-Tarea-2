@@ -1,35 +1,42 @@
-# AlgoReportTemplate
+# Informe - Tarea 2, INF-221
 
-## Descripción
+Matías Jorquera · 202310127-3 · Casa Central · 2026-2.
 
-Este repositorio contiene una plantilla en **LaTeX** diseñada específicamente para la creación de mini-informes en la asignatura **Algoritmos y Complejidad** del Departamento de Informática de la **Universidad Técnica Federico Santa María (UTFSM)**. La plantilla está estructurada para facilitar la redacción de tareas, reportes de laboratorio y proyectos relacionados con el análisis de algoritmos.
+El informe analiza grid pathfinding con fuerza bruta, DP y greedy. Contiene
+la recurrencia y justificación de DP, complejidades, metodología, tablas,
+gráficos y discusión de tiempo, memoria, brecha y fallas por tamaño, tipo y dominio.
 
-### Modificación de la plantilla
+## Archivos
 
-- Escriba sus datos en `author.tex`.
-- `preamble.tex` y `report.tex` NO debe ser modificados.
-- `references.bib` contiene las referencias bibliográficas. Agregue las suyas.
-- `report.pdf` es el archivo de salida generado por `pdflatex`.
-- Elimine las figuras existentes y utilice las que generará en su informe.
+- `author.tex`: autor y datos de la tarea.
+- `sections/introduccion.tex`: objetivo del estudio.
+- `sections/experiment_intro.tex`: dataset y mediciones.
+- `sections/experiment_results.tex`: análisis teórico y experimental.
+- `sections/generated_cost_table.tex`, `sections/generated_quality_table.tex`: tablas generadas del CSV.
+- `sections/conclusions.tex`: conclusiones respaldadas por los resultados.
+- `references.bib`: enunciado, libro de Roughgarden y documentación de memoria.
+- `report.pdf`: informe compilado.
+
+## Regenerar datos y figuras
+
+Desde `code/grid_pathfinding/`, ejecutar:
 
 ```bash
-.
-├── author.tex
-├── preamble.tex
-├── README.md
-├── references.bib
-├── report.pdf
-├── report.tex
-└── sections
-    ├── conclusions.tex
-    ├── experiment_intro.tex
-    ├── experiment_results.tex
-    └── introduccion.tex
-
-2 directories, 10 files
-
+python scripts/run_measurements.py
+python scripts/plot_generator.py
+python scripts/generate_report_tables.py
 ```
 
-### Entrega
+Los PNG se leen directamente desde `code/grid_pathfinding/data/plots/`.
+Las tablas se generan desde `data/measurements/results.csv`.
 
-La entrega se realiza vía **aula.usm.cl** en formato `.zip`.
+## Compilar
+
+```bash
+pdflatex -interaction=nonstopmode -halt-on-error report.tex
+biber report
+pdflatex -interaction=nonstopmode -halt-on-error report.tex
+pdflatex -interaction=nonstopmode -halt-on-error report.tex
+```
+
+También puede compilarse en Overleaf con el proyecto completo.

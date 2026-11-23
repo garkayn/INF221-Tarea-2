@@ -1,6 +1,6 @@
-// Fuentes: enunciado de la Tarea 2, secciones "Definición del problema" e
-// "Implementaciones". Se usa DFS para enumerar todas las secuencias de R y D;
+// Se usa DFS para enumerar todas las secuencias de R y D;
 // solo se abandona una rama cuando entra a una muralla o agota las vidas.
+// Matías Jorquera, rol 202310127-3, INF-221, Tarea 2, 2026-2, Casa Central.
 
 #include <functional>
 #include <string>

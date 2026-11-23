@@ -1,0 +1,21 @@
+{
+  "metadata_generated_utc": "2026-11-23T04:48:58+00:00",
+  "results_modified_utc": "2026-11-22T20:24:16+00:00",
+  "results_sha256": "872d4479af56907583653ab2c349a8049d647ce9364c75c0ef65589587b50e3b",
+  "cpu": "Intel Core i7-8700 @ 3.20 GHz",
+  "logical_processors": 12,
+  "physical_ram_gib": 31.9,
+  "os": "Windows 11, build 26100",
+  "compiler": "g++ (Rev8, Built by MSYS2 project) 15.2.0",
+  "compiler_flags": "-std=c++17 -O2",
+  "python": "3.12 (registrado durante la medición)",
+  "numpy": "versión no registrada",
+  "pandas": "versión no registrada",
+  "matplotlib": "versión no registrada",
+  "inputs": 288,
+  "inputs_sha256": "96f4782df507c10bb5dea590fd4029a32e9ab13ba80f348fdaba5ecb9049681b",
+  "repetitions": 3,
+  "bruteforce_16x16_repetitions": 1,
+  "time_metric": "median solver time, microseconds",
+  "memory_metric": "PeakWorkingSetSize, bytes, whole isolated process"
+}

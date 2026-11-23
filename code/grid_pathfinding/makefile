@@ -1,5 +1,10 @@
 CXX := g++
 CXXFLAGS := -std=c++17 -O2 -Wall -Wextra
+PYTHON ?= python
+
+ifeq ($(OS),Windows_NT)
+LDLIBS += -lpsapi
+endif
 
 TARGET := grid_pathfinding
 SRCS := grid_pathfinding.cpp \
@@ -11,7 +16,7 @@ OBJS := $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -19,4 +24,10 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-.PHONY: all clean
+measurements:
+	$(PYTHON) scripts/run_measurements.py
+
+plots:
+	$(PYTHON) scripts/plot_generator.py
+
+.PHONY: all clean measurements plots
